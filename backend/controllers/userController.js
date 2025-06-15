@@ -52,7 +52,8 @@ export const getUserProfile = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find().select('-password'); // Exclude password from the response
+        const loggedInUserId = req.user; // Get logged-in user ID from the request object set by authMiddleware
+        const users = await User.find({_id: {$ne: loggedInUserId}}).select('-password'); // Exclude password from the response
         res.status(200).json(users);
     } catch (error) {
         console.error("Error fetching all users:", error);

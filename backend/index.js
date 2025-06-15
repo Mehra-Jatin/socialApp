@@ -14,7 +14,10 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser()); // Middleware to parse cookies
 
 app.use('/api/auth', authRoute);
-app.use('/api/user',userRoute); // Assuming you have a userRoute for user-related operations
+app.use('/api/user',userRoute); 
+app.use('/api/message',messageRoute);
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
