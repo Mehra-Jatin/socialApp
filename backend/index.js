@@ -1,17 +1,20 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import authRoute from './routes/authRoute.js';
+import cookieParser from 'cookie-parser';
 import { connectDB } from './lib/db.js';
+import authRoute from './routes/authRoute.js';
+import userRoute from './routes/userRoute.js'; 
 
-dotenv.config(); 
+dotenv.config();  // Load environment variables from .env file
 const app = express();
 
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json());
+app.use(express.json()); // Middleware to parse JSON bodies
+app.use(cookieParser()); // Middleware to parse cookies
 
 app.use('/api/auth', authRoute);
-
+app.use('/api/user',userRoute); // Assuming you have a userRoute for user-related operations
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
