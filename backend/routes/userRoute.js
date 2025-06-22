@@ -7,5 +7,5 @@ const router = express.Router();
 
 router.get('/all', authMiddleware, getAllUsers);
 router.get('/profile', authMiddleware, getUserProfile);
-router.post('/update-image', authMiddleware, updateImage);
+router.put('/update-image', authMiddleware, updateImage);
 export default router;

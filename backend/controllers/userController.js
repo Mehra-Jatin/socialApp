@@ -1,4 +1,6 @@
 import User from '../models/userModel.js';
+import cloudinary from '../lib/cloudinary.js'; // Assuming you have a cloudinary config file
+
 export const updateImage = async (req, res) => {
     const userId = req.user; // Get user ID from the request object set by authMiddleware
     const { profilePicture } = req.body; // Assuming the new image URL is sent in the request body
