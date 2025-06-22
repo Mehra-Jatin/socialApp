@@ -5,7 +5,23 @@ import SignUpPage from './pages/SignUpPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import SettingsPage from './pages/SettingsPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import { useAuthStore } from './store/useAuthStore.js';
+import { use, useEffect } from 'react';
+
+
+
+
+
 function App() {
+
+   const {authUser , checkAuth} = useAuthStore();
+
+   useEffect(() => {
+     checkAuth();
+   }, [checkAuth]);
+
+   console.log(authUser);
+
   return (
     <div>
       <Router>
