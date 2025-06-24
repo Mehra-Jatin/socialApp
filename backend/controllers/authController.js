@@ -28,11 +28,12 @@ export const login = async (req, res) => {
         expiresIn: "1h",
         });
     
-        res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-        maxAge: 3600000, // 1 hour
-        });
+         res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite : 'None',
+      maxAge: 3600000, // 1 hour
+    });
     
         res.status(200).json({
         _id: user._id,
@@ -84,6 +85,7 @@ export const register = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite : 'None',
       maxAge: 3600000, // 1 hour
     });
 
