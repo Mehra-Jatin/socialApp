@@ -3,7 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL = import.meta.env.SERVER_URL || "http://localhost:5000";
+const BASE_URL = import.meta.env.SERVER_URL || "https://socialapp-1-f2ri.onrender.com";
 
 export const useAuthStore = create((set,get) => ({
    
