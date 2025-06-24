@@ -21,6 +21,7 @@ export const useChatStore = create((set,get) => ({
             }
         } catch (error) {
             console.error("Error fetching users:", error);
+            set({ users: [] });
             toast.error("Failed to load users. Please try again.");
         } finally {
             set({ isUsersLoading: false });
