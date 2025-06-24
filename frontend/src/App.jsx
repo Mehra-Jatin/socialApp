@@ -15,7 +15,7 @@ import  {Toaster} from "react-hot-toast";
 
 function App() {
 
-   const {authUser , checkAuth , isCheckingAuth } = useAuthStore();
+   const {authUser , checkAuth , isCheckingAuth} = useAuthStore();
    
 
 
@@ -23,7 +23,7 @@ function App() {
      checkAuth();
    }, [checkAuth]);
 
-
+   console.log(authUser);
 
    if(isCheckingAuth && !authUser) {
     return (
