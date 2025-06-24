@@ -24,7 +24,7 @@ function App() {
    }, [checkAuth]);
 
    console.log(authUser);
-
+   console.log(import.meta.env.VITE_SERVER_URL);
    if(isCheckingAuth && !authUser) {
     return (
       <div className="flex items-center justify-center h-screen">
