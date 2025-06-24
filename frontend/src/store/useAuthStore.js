@@ -17,7 +17,7 @@ export const useAuthStore = create((set,get) => ({
     checkAuth: async ()=>{
         set({ isCheckingAuth: true });
         try{
-            const response = await axiosInstance.get("/auth/check");
+            const response = await axiosInstance.get("/api/auth/check");
             if (response.status === 200) {
                 set({ authUser: response.data });
                 toast.success("Authentication check successful!");
@@ -39,7 +39,7 @@ export const useAuthStore = create((set,get) => ({
     signup: async (data)=>{
         set({ isSigningUp: true });
         try {
-            const response = await axiosInstance.post("/auth/register", data);
+            const response = await axiosInstance.post("/api/auth/register", data);
             if (response.status === 201) {
                
                 set({ authUser: response.data });
@@ -58,7 +58,7 @@ export const useAuthStore = create((set,get) => ({
 
     logout: async () => {
         try {
-            const response = await axiosInstance.post("/auth/logout");
+            const response = await axiosInstance.post("/api/auth/logout");
             if (response.status === 200) {
                 set({ authUser: null });
                 toast.success("Logged out successfully!");
@@ -75,7 +75,7 @@ export const useAuthStore = create((set,get) => ({
     login: async (data) => {
         set({ isLoggingIn: true });
         try {
-            const response = await axiosInstance.post("/auth/login", data);
+            const response = await axiosInstance.post("/api/auth/login", data);
             if (response.status === 200) {
                 set({ authUser: response.data });
                 toast.success("Login successful!");
@@ -95,7 +95,7 @@ export const useAuthStore = create((set,get) => ({
   updateProfile: async (data) => {
         set({ isUpdatingProfile: true });
         try {
-            const response = await axiosInstance.put("/user/update-image", data);
+            const response = await axiosInstance.put("/api/user/update-image", data);
             if (response.status === 200) {
                 set({ authUser: response.data });
                 toast.success("Profile updated successfully!");

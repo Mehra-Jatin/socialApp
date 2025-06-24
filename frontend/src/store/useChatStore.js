@@ -13,7 +13,7 @@ export const useChatStore = create((set,get) => ({
     getUsers: async () => {
         set({ isUsersLoading: true });
         try {
-            const response = await axiosInstance.get("/user/all");
+            const response = await axiosInstance.get("/api/user/all");
             if (response.status === 200) {
                 set({ users: response.data });
             } else {
@@ -30,7 +30,7 @@ export const useChatStore = create((set,get) => ({
     getMessages: async (userId) => {
         set({ isMessagesLoading: true });
         try {
-            const response = await axiosInstance.get(`/message/${userId}`);
+            const response = await axiosInstance.get(`/api/message/${userId}`);
             if (response.status === 200) {
                 set({ messages: response.data });
             } else {
@@ -56,7 +56,7 @@ export const useChatStore = create((set,get) => ({
         }
         
         try {
-            const response = await axiosInstance.post(`/message/send/${selectedUser._id}`, messageContent);
+            const response = await axiosInstance.post(`/api/message/send/${selectedUser._id}`, messageContent);
             
             if (response.status === 201) {
                 set({ messages: [...messages, response.data] });
