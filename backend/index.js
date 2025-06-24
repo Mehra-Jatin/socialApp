@@ -8,12 +8,13 @@ import authRoute from './routes/authRoute.js';
 import userRoute from './routes/userRoute.js'; 
 import messageRoute from './routes/messageRoute.js';
 
+import { server,app } from './lib/socket.js'; 
+
 dotenv.config();  // Load environment variables from .env file
-const app = express();
 
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json()); // Middleware to parse JSON bodies
+app.use(express.json({limit:'10mb'})); // Middleware to parse JSON bodies
 app.use(cookieParser()); // Middleware to parse cookies
 app.use(cors(
   {
@@ -27,7 +28,7 @@ app.use('/api/user',userRoute);
 app.use('/api/message',messageRoute);
 
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });
