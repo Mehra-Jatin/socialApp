@@ -1,6 +1,6 @@
 import User from '../models/userModel.js';
 import cloudinary from '../lib/cloudinary.js'; // Assuming you have a cloudinary config file
-
+import Message from '../models/messageModel.js';
 export const updateImage = async (req, res) => {
     const userId = req.user; // Get user ID from the request object set by authMiddleware
     const { profilePicture } = req.body; // Assuming the new image URL is sent in the request body
@@ -53,14 +53,46 @@ export const getUserProfile = async (req, res) => {
 };
 
 export const getAllUsers = async (req, res) => {
-    try {
-        const loggedInUserId = req.user; // Get logged-in user ID from the request object set by authMiddleware
-        const users = await User.find({_id: {$ne: loggedInUserId}}).select('-password'); // Exclude password from the response
-        res.status(200).json(users);
-    } catch (error) {
-        console.error("Error fetching all users:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+  try {
+    const loggedInUserId = req.user;
+
+    // Step 1: Get all other users
+    const users = await User.find({ _id: { $ne: loggedInUserId } }).select(
+      "-password"
+    );
+
+    // Step 2: Attach latest message to each user
+    const usersWithLastMessage = await Promise.all(
+      users.map(async (user) => {
+        const lastMessage = await Message.findOne({
+          $or: [
+            { senderId: loggedInUserId, receiverId: user._id },
+            { senderId: user._id, receiverId: loggedInUserId },
+          ],
+        })
+          .sort({ createdAt: -1 })
+          .lean();
+
+        return {
+          ...user.toObject(),
+          lastMessage: lastMessage?.text || null,
+          lastMessageTime: lastMessage?.createdAt || null,
+        };
+      })
+    );
+
+    // Step 3: Sort users by lastMessageTime (descending)
+    usersWithLastMessage.sort((a, b) => {
+      if (!a.lastMessageTime) return 1;
+      if (!b.lastMessageTime) return -1;
+      return new Date(b.lastMessageTime) - new Date(a.lastMessageTime);
+    });
+
+    res.status(200).json(usersWithLastMessage);
+  } catch (error) {
+    console.error("Error fetching users with last message:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 

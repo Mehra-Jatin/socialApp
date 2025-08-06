@@ -21,15 +21,16 @@ export const getMessages = async (req, res) => {
   }
 };
 
+
 export const sendMessage = async (req, res) => {
-  const { id: receiverId } = req.params; // Extract receiverId from request parameters
-  const senderId = req.user; // Get senderId from authenticated user
-  const { text, image } = req.body; // Get message content from request body
+  const { id: receiverId } = req.params;
+  const senderId = req.user;
+  const { text, image } = req.body;
 
   let imageUrl;
   if (image) {
     const upload = await cloudinary.uploader.upload(image);
-    imageUrl = upload.secure_url; // Get the secure URL of the uploaded image
+    imageUrl = upload.secure_url;
     if (!imageUrl) {
       return res.status(400).json({ message: "Image upload failed" });
     }
@@ -41,18 +42,49 @@ export const sendMessage = async (req, res) => {
       receiverId,
       text,
       image: imageUrl,
+      status: "sent", // 👈 Set status
     });
 
-    const receiverSocketId = getReciverSocketId(receiverId); // Get the socket ID of the receiver
-    if(receiverSocketId){
-       io.to(receiverSocketId).emit("newMessage", newMessage); // Emit the new message to the receiver's socket
+    const receiverSocketId = getReciverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
     }
 
-    res.status(201).json(newMessage); // Return the newly created message as JSON response
+    res.status(201).json(newMessage);
   } catch (error) {
     console.error("Error sending message:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
+export const markMessagesAsRead = async (req, res) => {
+  const { messageIds } = req.body;
+  const userId = req.user;
+
+  try {
+    // Update messages
+    await Message.updateMany(
+      { _id: { $in: messageIds }, receiverId: userId },
+      { $set: { status: "read" } }
+    );
+
+    // Notify the sender(s) in real time
+    const updatedMessages = await Message.find({ _id: { $in: messageIds } });
+
+    updatedMessages.forEach((msg) => {
+      const senderSocketId = getReciverSocketId(msg.senderId);
+      if (senderSocketId) {
+        io.to(senderSocketId).emit("messageRead", {
+          messageIds: [msg._id],
+          status: "read",
+        });
+      }
+    });
+
+    res.status(200).json({ message: "Messages marked as read" });
+  } catch (error) {
+    console.error("Error marking messages as read:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
