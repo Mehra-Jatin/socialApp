@@ -18,7 +18,7 @@ app.use(express.json({limit:'10mb'})); // Middleware to parse JSON bodies
 app.use(cookieParser()); // Middleware to parse cookies
 app.use(cors(
   {
-    origin: ['http://localhost:5173', process.env.CLIENT_URL], // Allow requests from these origins
+    origin: [process.env.CLIENT_URL], // Allow requests from these origins
     credentials: true, // Allow cookies to be sent with requests
   }
 ))
