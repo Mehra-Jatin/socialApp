@@ -18,7 +18,7 @@
 https://social-app-omega-six.vercel.app/
 
 >⚠️ **Note:** It may take **a few seconds to load** the app as the backend is hosted on **Render**, which **spins down the server after 15 minutes of inactivity**.
->- open the link in 2 diffrent browser incognito is not working
+>- open the link in 2 diffrent browser incognito dosen't support third party cookies 
 ---
 ## Test Emails
 - karan123@gmail.com password-> karan123
